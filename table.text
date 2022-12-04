@@ -1,0 +1,50 @@
+
+CREATE TABLE New -- 입주신청 @
+ (   	StuID INT NOT NULL PRIMARY KEY, -- 학번 키 
+    Name CHAR(15) 	 NOT NULL, -- 
+    Major CHAR(20)    NOT NULL,  -- 
+   	Grade INT NOT NULL  -- 
+  
+ );
+
+CREATE TABLE Dom -- 기숙사@
+ (   	 Room INT NOT NULL PRIMARY KEY, -- 
+       StuID INT	 NOT NULL, -- 
+   FOREIGN KEY (StuID) REFERENCES New(StuID)   
+ );
+
+CREATE TABLE RewardPoints -- 상벌점@
+ (   	 StuID INT NOT NULL PRIMARY KEY, -- 
+       merit INT	 NOT NULL, -- 
+      demerit INT NOT NULL,-- --    
+   FOREIGN KEY (StuID) REFERENCES New(StuID)   
+ );
+
+CREATE TABLE Menu -- 식단조회@
+ (   	Date INT  NOT NULL PRIMARY KEY, -- 
+      Rice CHAR(20) NOT NULL, -- 
+      side CHAR(20) NOT NULL,  -- 
+   	soup CHAR(20)  NOT NULL  -- 
+   
+ );
+
+CREATE TABLE Sleepover -- 외박신청
+ (   	 StuID INT NOT NULL PRIMARY KEY, -- 
+      Name CHAR(15) 	 NOT NULL, -- 
+      Room INT NOT NULL,
+   	Date INT  NOT NULL,
+   FOREIGN KEY (Room) REFERENCES Dom(Room),
+   FOREIGN KEY (StuID) REFERENCES New(StuID)   
+
+ );
+CREATE TABLE Covid -- 코로나19 확진신고 
+ (   	 StuID INT NOT NULL PRIMARY KEY, -- 
+      Name CHAR(15) 	 NOT NULL, -- 
+      Room INT NOT NULL,
+   	route CHAR(30)  NOT NULL,  -- 
+   	hmc CHAR(10)  NOT NULL,  -- 
+   FOREIGN KEY (Room) REFERENCES Dom(Room),   
+  FOREIGN KEY (StuID) REFERENCES New(StuID)   
+ );
+
+
