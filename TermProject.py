@@ -149,7 +149,17 @@ while a !=999:
                     vals = (Stuid,name,major,grade)
                     print('학번:%s\n 이름: %s\n 학과: %s\n 학년: %s\n 입주신청되었습니다! \n'%vals)
                 elif table=='2':         
-                    print('돌아가기\n')              
+                    print('돌아가기\n')
+                elif table=='3':
+                    print('이름,학과,학년,학번을 순서대로 입력하세요\n')
+                    name=input('이름: ')
+                    major=input('학과: ')
+                    grade=input('학년: ')
+                    StuID=input('학번 : ')
+                    sql = "UPDATE New SET Name=%s,Major=%s,Grade=%s where StuID=%s"       
+                    vals = (name,major,grade,StuID)
+                    #print('학번:%s\n 이름: %s\n 학과: %s\n 학년: %s\n 입주신청 수정되었습니다! \n'%vals)
+                             
                 else:
                     print('잘못된 입력입니다.')
                     
@@ -236,11 +246,12 @@ while a !=999:
                 cur.execute(sql, vals)
                 connect.commit()
             elif a ==6:#완성 상벌점 조회 테이블 
-                print('상벌점 조회')
-                print('상점,벌점조회하기 ')
-                print('1.상점 ')
-                print('2.벌점 ')
+                #print('상벌점 조회')
+                print('상점,벌점 관리하기 ')
+                print('1.상점조회 ')
+                print('2.벌점조회 ')
                 print('3.상,벌점 전체조회')
+                print('4.상점,벌점 부여하기')
                 table= input()
                 if table=='1': #상점조회
                     merit1 = int(input("몇 점 이상을 검색하시겠습니까? "))
@@ -264,6 +275,19 @@ while a !=999:
                     cur.execute("SELECT * FROM RewardPoints")
                     rows = cur.fetchall()
                     print_meritTable(rows)
+                # elif table=='4':
+                    # # cur.execute("SELECT * FROM RewardPoints")
+                    # # rows = cur.fetchall()
+                    # # print_meritTable(rows)
+                    # print('상점,벌점,학점을 순서대로 입력하세요\n')                    
+                    # merit=input('상점:')
+                    # demerit=input('벌점:')
+                    # StuID=input('학번:')                    
+                    # #sql = "INSERT INTO New RewardPoints(%s, %s, %s)"
+                    # #UPDATE RewardPoints SET merit =5,demerit=5 where StuID ='38054';
+                    # sql = "UPDATE RewardPoints SET merit =(%s),demerit=(%s) where StuID=(%s)"      
+                    # vals = (StuID,merit,demerit)
+                    # print('학번:%s\n상점:%s\n벌점:%s\n 부여되었습니다! \n'%vals)
                 else:
                     print('잘못된 입력입니다.')                   
             elif a ==7:#급식 조회테이블
@@ -301,8 +325,8 @@ while a !=999:
                     rows = cur.fetchall()
                     print_covid(rows)
                 elif table=='4':
-                    Domnum1 = int(input("몇 호를 검색하시겠습니까? "))
-                    Domnum2 = int(input("몇 호를 검색하시겠습니까? "))
+                    Domnum1 = int(input("몇 호부터 검색하시겠습니까? "))
+                    Domnum2 = int(input("몇 호까지 검색하시겠습니까? "))
                     a1 =  Domnum1
                     a2 =  Domnum2
                     sql = "SELECT * FROM Dom WHERE LEFT(Room, 4) BETWEEN {} AND {}".format(a1,a2)
