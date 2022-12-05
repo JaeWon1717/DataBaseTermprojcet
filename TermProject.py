@@ -95,6 +95,19 @@ def print_Menu(rows):
             print(str(r[c]).center(11, ' '), end='\t')
         print("")
         print("------------------------------------------------------------------")
+def print_Domnum(rows):
+    print("\n------------------------------------------------------------------------")
+    cnames = ['학번', '호실']
+    for c in cnames:
+        print(c.center(11, ' '), end='\t')
+    print("\n------------------------------------------------------------------------")
+    ccodes = ['StuID', 'Room']
+    for r in rows:
+        for c in ccodes:
+            print(str(r[c]).center(11, ' '), end='\t')
+        print("")
+        print("------------------------------------------------------------------------")
+
 import pymysql
 
 connect = pymysql.connect(host='192.168.230.3',user='jpark', password='1234', db='Termpro', port=4567, charset='utf8',)
@@ -271,7 +284,8 @@ while a !=999:
                 print('검색할 테이블을 선택하세요\n')
                 print('1. 관원생 조회\n')
                 print('2. 외박신청 현황\n')
-                print('3. 코로나 19 감염자 현황\n')   
+                print('3. 코로나 19 감염자 현황\n')
+                print('4. 특정호실 조회\n')  
                 print('테이블 번호을 입력하세요: ')
                 table= input()
                 if table=='1':
@@ -286,6 +300,16 @@ while a !=999:
                     cur.execute("SELECT * FROM Covid")
                     rows = cur.fetchall()
                     print_covid(rows)
+                elif table=='4':
+                    Domnum1 = int(input("몇 호를 검색하시겠습니까? "))
+                    Domnum2 = int(input("몇 호를 검색하시겠습니까? "))
+                    a1 =  Domnum1
+                    a2 =  Domnum2
+                    sql = "SELECT * FROM Dom WHERE LEFT(Room, 4) BETWEEN {} AND {}".format(a1,a2)
+                    
+                    cur.execute(sql)
+                    rows = cur.fetchall()
+                    print_Domnum(rows)
                 else:
                     print('잘못된 입력입니다.')                         
             elif a==999:
