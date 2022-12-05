@@ -47,4 +47,10 @@ CREATE TABLE Covid -- 코로나19 확진신고
   FOREIGN KEY (StuID) REFERENCES New(StuID)   
  );
 
+CREATE TABLE Repair -- 유지보수 신청 
+ (   	 Room INT NOT NULL PRIMARY KEY, -- 
+      Repair CHAR(15) 	 NOT NULL, -- 
+  FOREIGN KEY (Room) REFERENCES Dom(Room)
+ );
+
 

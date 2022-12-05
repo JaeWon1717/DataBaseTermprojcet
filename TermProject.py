@@ -195,8 +195,7 @@ while a !=999:
                 elif table=='2':         
                     print('돌아가기\n')                   
                 else:
-                    print('잘못된 입력입니다.')               
-                               
+                    print('잘못된 입력입니다.')                         
             elif a ==3: #완성 #관원생조회 테이블
                 print('전체 관원생조회하기')
                 print('검색할 테이블을 선택하세요\n')
@@ -226,13 +225,12 @@ while a !=999:
                     sql = "INSERT INTO Sleepover VALUES(%s, %s, %s, %s)"       
                     vals = (StuID,room,date,reason)
                     print('학번: %s\n 호실: %s\n 신청날짜 %s\n 신청사유 %s\n 저장되었습니다! \n'%vals)
-
+                    cur.execute(sql, vals)
+                    connect.commit()
                 elif table=='2':
                     print('돌아가기.')                   
                 else:
-                    print('잘못된 입력입니다.')                    
-                cur.execute(sql, vals)
-                connect.commit()
+                    print('잘못된 입력입니다.')                                  
             elif a ==5:#완성 코로19확진 신고 테이블
                 print('코로나19확진신고')
                 print('코로나 19 확진자 신고하기 (입주생만 신청할 수 있습니다)\n')
@@ -263,7 +261,6 @@ while a !=999:
                 print('1.상점조회 ')
                 print('2.벌점조회 ')
                 print('3.상,벌점 전체조회')
-                print('4.상점,벌점 부여하기')
                 table= input()
                 if table=='1': #상점조회
                     merit1 = int(input("몇 점 이상을 검색하시겠습니까? "))
@@ -286,17 +283,7 @@ while a !=999:
                 elif table=='3':
                     cur.execute("SELECT * FROM RewardPoints")
                     rows = cur.fetchall()
-                    print_meritTable(rows)
-                elif table=='4':                   
-                    print('상점,벌점,학점을 순서대로 입력하세요\n')                    
-                    merit=input('상점:')
-                    demerit=input('벌점:')
-                    StuID=input('학번:')                    
-                    sql = "UPDATE RewardPoints SET merit =(%s),demerit=(%s) where StuID=(%s)"      
-                    vals = (merit,demerit,StuID)
-                    cur.execute(sql, vals)
-                    connect.commit()
-                    print('학번:%s\n상점:%s\n벌점:%s\n 부여되었습니다! \n'%vals)
+                    print_meritTable(rows)                
                 else:
                     print('잘못된 입력입니다.')                   
             elif a ==7:#급식 조회테이블
@@ -340,7 +327,8 @@ while a !=999:
                 print('5 전체 관원생 수 조회\n') 
                 print('6.관원생 호실 이동\n')  
                 print('7.유지보수 접수건 확인\n')
-                print('8.유지보수 접수건 처리하기')             
+                print('8.유지보수 접수건 처리하기')
+                print('9.상,벌점부여하기\n')            
                 print('테이블 번호을 입력하세요: ')
                 table= input()
                 if table=='1':
@@ -387,11 +375,22 @@ while a !=999:
                     print('몇 호를 수리하셨습니까?(기존 유지보수 접수건만 삭제가능)\n')                    
                     room=input('선택호실: ')    
                     sql = "delete from Repair where Room=%s"
+                    print('%s 호 신청사항을 정상적으로 처리하였습니다.)\n')
                     vals = (room)
                     cur.execute(sql, vals)
                     connect.commit()
                     # rows = cur.fetchall()
                     # print_Domnum(rows)
+                elif table =='9':#상,벌점부여하기                
+                    print('상점,벌점,학점을 순서대로 입력하세요\n')                    
+                    merit=input('상점:')
+                    demerit=input('벌점:')
+                    StuID=input('학번:')                    
+                    sql = "UPDATE RewardPoints SET merit =(%s),demerit=(%s) where StuID=(%s)"      
+                    vals = (merit,demerit,StuID)
+                    cur.execute(sql, vals)
+                    connect.commit()
+                    print('학번:%s\n상점:%s\n벌점:%s\n 부여되었습니다! \n'%vals)
                 else:
                     print('잘못된 입력입니다.')                         
             elif a==999:
