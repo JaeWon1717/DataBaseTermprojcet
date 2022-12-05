@@ -157,8 +157,7 @@ while a !=999:
                     grade=input('학년: ')
                     StuID=input('학번 : ')
                     sql = "UPDATE New SET Name=%s,Major=%s,Grade=%s where StuID=%s"       
-                    vals = (name,major,grade,StuID)
-                    #print('학번:%s\n 이름: %s\n 학과: %s\n 학년: %s\n 입주신청 수정되었습니다! \n'%vals)
+                    vals = (name,major,grade,StuID)                    
                              
                 else:
                     print('잘못된 입력입니다.')
@@ -304,12 +303,14 @@ while a !=999:
                 else:
                     print('잘못된 입력입니다.')
             elif a==9:#9. 관리자용: 전체테이블조회 완성
-                print('관리자용: 전체테이블조회')
-                print('검색할 테이블을 선택하세요\n')
-                print('1. 관원생 조회\n')
+                print('관리자용메뉴\n')
+                print('수행하실 업무를 선택하세요\n')
+                print('1. 관원생 조회(호실등록까지 마쳐야 조회가능합니다)\n')
                 print('2. 외박신청 현황\n')
                 print('3. 코로나 19 감염자 현황\n')
-                print('4. 특정호실 조회\n')  
+                print('4. 특정호실 조회\n')
+                print('5 전체 관원생 수 조회\n') 
+                print('6.관원생 호실 이동\n')               
                 print('테이블 번호을 입력하세요: ')
                 table= input()
                 if table=='1':
@@ -334,6 +335,22 @@ while a !=999:
                     cur.execute(sql)
                     rows = cur.fetchall()
                     print_Domnum(rows)
+                elif table=='5':
+                    sql='select count(*) from New'
+                    cur.execute(sql)
+                    rows = cur.fetchall()
+                    print('전체 관원생 수는')
+                    print(rows)
+                    print('명 입니다')
+                elif table=='6':#관원생 호실이동 
+                    print
+                    print('이동할 방번호와 학번을 입력하세요.(코로나 감염자는 방을 이동할 수없습니다)\n')
+                    Room=input('이동할 방번호: ')
+                    StuID=input('학번: ')
+                    sql = "UPDATE Dom SET Room=%s where StuID=%s"       
+                    vals = (Room,StuID)
+                    cur.execute(sql, vals)
+                    connect.commit()
                 else:
                     print('잘못된 입력입니다.')                         
             elif a==999:
