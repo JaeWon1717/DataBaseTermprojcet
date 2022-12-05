@@ -107,7 +107,18 @@ def print_Domnum(rows):
             print(str(r[c]).center(11, ' '), end='\t')
         print("")
         print("------------------------------------------------------------------------")
-
+def print_Repair(rows):
+    print("\n--------------------------------------------------")
+    cnames = ['호실', ' 요구사항']
+    for c in cnames:
+        print(c.center(11, ' '), end='\t')
+    print("\n--------------------------------------------------")
+    ccodes = ['Room', 'Repair']
+    for r in rows:
+        for c in ccodes:
+            print(str(r[c]).center(11, ' '), end='\t')
+        print("")
+        print("--------------------------------------------------")
 import pymysql
 
 connect = pymysql.connect(host='192.168.230.3',user='jpark', password='1234', db='Termpro', port=4567, charset='utf8',)
@@ -126,6 +137,7 @@ while a !=999:
             print('5. 코로나19확진신고\n')#완성
             print('6. 상벌점 조회\n')#완성
             print('7. 급식 메뉴 조회하기\n')#완성
+            print('8. 유지보수 접수하기\n')
             print('9. 관리자용: 전체테이블조회\n')
             print('999.저장하고 나가기\n')
             print('입력된 번호 : ')
@@ -178,12 +190,13 @@ while a !=999:
                     sql = "INSERT INTO Dom VALUES(%s, %s)"       
                     vals = (room,Stuid)
                     print('%s 호로 학번: %s  배정되었습니다\n'%vals)
+                    cur.execute(sql, vals)
+                    connect.commit() 
                 elif table=='2':         
                     print('돌아가기\n')                   
                 else:
-                    print('잘못된 입력입니다.')                  
-                cur.execute(sql, vals)
-                connect.commit()                
+                    print('잘못된 입력입니다.')               
+                               
             elif a ==3: #완성 #관원생조회 테이블
                 print('전체 관원생조회하기')
                 print('검색할 테이블을 선택하세요\n')
@@ -274,19 +287,16 @@ while a !=999:
                     cur.execute("SELECT * FROM RewardPoints")
                     rows = cur.fetchall()
                     print_meritTable(rows)
-                # elif table=='4':
-                    # # cur.execute("SELECT * FROM RewardPoints")
-                    # # rows = cur.fetchall()
-                    # # print_meritTable(rows)
-                    # print('상점,벌점,학점을 순서대로 입력하세요\n')                    
-                    # merit=input('상점:')
-                    # demerit=input('벌점:')
-                    # StuID=input('학번:')                    
-                    # #sql = "INSERT INTO New RewardPoints(%s, %s, %s)"
-                    # #UPDATE RewardPoints SET merit =5,demerit=5 where StuID ='38054';
-                    # sql = "UPDATE RewardPoints SET merit =(%s),demerit=(%s) where StuID=(%s)"      
-                    # vals = (StuID,merit,demerit)
-                    # print('학번:%s\n상점:%s\n벌점:%s\n 부여되었습니다! \n'%vals)
+                elif table=='4':                   
+                    print('상점,벌점,학점을 순서대로 입력하세요\n')                    
+                    merit=input('상점:')
+                    demerit=input('벌점:')
+                    StuID=input('학번:')                    
+                    sql = "UPDATE RewardPoints SET merit =(%s),demerit=(%s) where StuID=(%s)"      
+                    vals = (merit,demerit,StuID)
+                    cur.execute(sql, vals)
+                    connect.commit()
+                    print('학번:%s\n상점:%s\n벌점:%s\n 부여되었습니다! \n'%vals)
                 else:
                     print('잘못된 입력입니다.')                   
             elif a ==7:#급식 조회테이블
@@ -302,6 +312,24 @@ while a !=999:
                     print('돌아가기.')                   
                 else:
                     print('잘못된 입력입니다.')
+            elif a ==8:#유지보수 신청 테이블
+                print('유지보수요청을 등록하시겠습니까??\n')
+                print('1. 조회하기\n')
+                print('2. 나가기\n')
+                table= input()
+                if table=='1':
+                    print('선택호실,요구사항을 순서대로 입력하세요\n')
+                    room=input('선택호실: ')        
+                    Repair=input('요구사항(15자 이내) : ')
+                    sql = "INSERT INTO Repair VALUES(%s, %s)"       
+                    vals = (room,Repair)
+                    print('%s 호: %s  접수되었습니다.\n'%vals)
+                    cur.execute(sql, vals)
+                    connect.commit()         
+                elif table=='2':
+                    print('돌아가기.')                   
+                else:
+                    print('잘못된 입력입니다.')
             elif a==9:#9. 관리자용: 전체테이블조회 완성
                 print('관리자용메뉴\n')
                 print('수행하실 업무를 선택하세요\n')
@@ -310,7 +338,9 @@ while a !=999:
                 print('3. 코로나 19 감염자 현황\n')
                 print('4. 특정호실 조회\n')
                 print('5 전체 관원생 수 조회\n') 
-                print('6.관원생 호실 이동\n')               
+                print('6.관원생 호실 이동\n')  
+                print('7.유지보수 접수건 확인\n')
+                print('8.유지보수 접수건 처리하기')             
                 print('테이블 번호을 입력하세요: ')
                 table= input()
                 if table=='1':
@@ -331,7 +361,6 @@ while a !=999:
                     a1 =  Domnum1
                     a2 =  Domnum2
                     sql = "SELECT * FROM Dom WHERE LEFT(Room, 4) BETWEEN {} AND {}".format(a1,a2)
-                    
                     cur.execute(sql)
                     rows = cur.fetchall()
                     print_Domnum(rows)
@@ -343,14 +372,26 @@ while a !=999:
                     print(rows)
                     print('명 입니다')
                 elif table=='6':#관원생 호실이동 
-                    print
-                    print('이동할 방번호와 학번을 입력하세요.(코로나 감염자는 방을 이동할 수없습니다)\n')
+                    print('이동할 방번호와 학번을 입력하세요.(코로나 감염자,외박중인학생은 이용할수없습니다)\n')
                     Room=input('이동할 방번호: ')
                     StuID=input('학번: ')
                     sql = "UPDATE Dom SET Room=%s where StuID=%s"       
                     vals = (Room,StuID)
                     cur.execute(sql, vals)
                     connect.commit()
+                elif table=='7':#유지보수 접수사항 확인
+                    cur.execute("SELECT * FROM Repair")
+                    rows = cur.fetchall()
+                    print_Repair(rows)
+                elif table =='8':#유지보수 접수건 처리하기
+                    print('몇 호를 수리하셨습니까?(기존 유지보수 접수건만 삭제가능)\n')                    
+                    room=input('선택호실: ')    
+                    sql = "delete from Repair where Room=%s"
+                    vals = (room)
+                    cur.execute(sql, vals)
+                    connect.commit()
+                    # rows = cur.fetchall()
+                    # print_Domnum(rows)
                 else:
                     print('잘못된 입력입니다.')                         
             elif a==999:
