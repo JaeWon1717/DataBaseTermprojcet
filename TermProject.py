@@ -215,16 +215,16 @@ while a !=999:
                 print('1. 신청하기\n')    
                 print('2. 돌아가기: ')
                 table= input()
-
                 if table=='1':
                     print('학번,호실,신청날짜,신청사유를 순서대로 적으세요\n')
-                    StuID=input('학번')
-                    room=input('호실')
-                    date=input('신청날짜')
-                    reason=input('신청사유')
-                    sql = "INSERT INTO Sleepover VALUES(%s, %s, %s, %s)"       
-                    vals = (StuID,room,date,reason)
-                    print('학번: %s\n 호실: %s\n 신청날짜 %s\n 신청사유 %s\n 저장되었습니다! \n'%vals)
+                    StuID=input('학번:')
+                    name=input('이름:')
+                    room=input('호실:')
+                    date=input('신청날짜:')
+                    reason=input('신청사유:')
+                    sql = "INSERT INTO Sleepover VALUES(%s,%s, %s, %s, %s)"       
+                    vals = (StuID,name,room,date,reason)
+                    print(' 학번: %s\n 이름: %s\n 호실: %s\n 신청날짜 %s\n 신청사유 %s\n 저장되었습니다! \n'%vals)
                     cur.execute(sql, vals)
                     connect.commit()
                 elif table=='2':
@@ -238,16 +238,16 @@ while a !=999:
                 print('2. 돌아가기: ')
                 table= input()
                 if table=='1':
-                    print('학번,호실,이름,감염경로,검사일자,자택귀가 여부를 순서대로 적으세요\n')
+                    print('학번,호실,이름,감염경로,자택귀가 여부,검사일자를 순서대로 적으세요\n')
                     StuID=input('학번')
-                    name=input('이름')
                     room=input('호실')
+                    name=input('이름')                    
                     route=input('감염경로')
                     hmc=input('자택귀가여부')
                     date=input('검사일자')
                     sql = "INSERT INTO Covid VALUES(%s, %s, %s, %s, %s, %s)"       
                     vals = (StuID,name,room,route,hmc,date)
-                    print('학번: %s\n 이름 %s\n 호실 %s\n 감염경로 %s\n 자택귀가여부 %s\n 검사일자 %s 저장되었습니다! \n'%vals)
+                    print('학번: %s\n 호실 %s\n 이름 %s\n 감염경로 %s\n 자택귀가여부 %s\n 검사일자 %s 저장되었습니다! \n'%vals)
 
                 elif table=='2':
                     print('돌아가기.')                   
@@ -301,7 +301,7 @@ while a !=999:
                     print('잘못된 입력입니다.')
             elif a ==8:#유지보수 신청 테이블
                 print('유지보수요청을 등록하시겠습니까??\n')
-                print('1. 조회하기\n')
+                print('1. 등록하기\n')
                 print('2. 나가기\n')
                 table= input()
                 if table=='1':
@@ -327,7 +327,7 @@ while a !=999:
                 print('5 전체 관원생 수 조회\n') 
                 print('6.관원생 호실 이동\n')  
                 print('7.유지보수 접수건 확인\n')
-                print('8.유지보수 접수건 처리하기')
+                print('8.유지보수 접수건 처리하기\n')
                 print('9.상,벌점부여하기\n')            
                 print('테이블 번호을 입력하세요: ')
                 table= input()
@@ -375,12 +375,10 @@ while a !=999:
                     print('몇 호를 수리하셨습니까?(기존 유지보수 접수건만 삭제가능)\n')                    
                     room=input('선택호실: ')    
                     sql = "delete from Repair where Room=%s"
-                    print('%s 호 신청사항을 정상적으로 처리하였습니다.)\n')
                     vals = (room)
+                    print('%s 호 신청사항을 정상적으로 처리하였습니다.\n'%vals)                    
                     cur.execute(sql, vals)
                     connect.commit()
-                    # rows = cur.fetchall()
-                    # print_Domnum(rows)
                 elif table =='9':#상,벌점부여하기                
                     print('상점,벌점,학점을 순서대로 입력하세요\n')                    
                     merit=input('상점:')
